@@ -89,6 +89,3 @@ Follow these steps to get the project running locally:
 5.  Wait for the loading spinner to disappear. The generated captions will appear in the text area.
 6.  Click the "Hear Captions" button to listen to the generated text.
 
-## License
-
-Refer to the LICENSE file in the repository. (You might want to specify the license type here, e.g., MIT License).
