@@ -2,7 +2,7 @@
 
 ![App Screenshot Placeholder](![image](https://github.com/user-attachments/assets/411e99a5-2166-44b5-80e9-61f0eca8910b)
 )
-*Replace placeholder.png with a link to a screenshot of your application after you upload one.*
+
 
 ## About This Project
 
