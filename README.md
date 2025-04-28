@@ -1,40 +1,97 @@
-# Build an Image Captioning Tool for Visually Impaired Users with Gemini
-This is the repository for the LinkedIn Learning course Build an Image Captioning Tool for Visually Impaired Users with Gemini. The full course is available from [LinkedIn Learning][lil-course-url].
+# AI Image Captioning Tool
 
-![lil-thumbnail-url]
+![App Screenshot Placeholder](![image](https://github.com/user-attachments/assets/411e99a5-2166-44b5-80e9-61f0eca8910b)
+)
+*Replace placeholder.png with a link to a screenshot of your application after you upload one.*
 
-When you’re designing for the web, it’s imperative that your designs are accessible to as many people as possible, and this includes visually impaired users. While there are many tools available to help you in this design task, artificial intelligence is making this easier than ever. In this course, software developer Fikayo Adepoju shows you how to use Google’s Gemini API to build an image caption generator that helps visually impaired users to better experience the web. Get hands-on experience with the Gemini API as Fikayo guides you through the building of the application from start to finish. Learn how to build the interface, connect the backend to Gemini, and then connect the frontend to the API. Whether you’re a developer, data scientist, or just have an interest in AI, join Fikayo to see how the Gemini API can make life easier for both you and your users.
+## About This Project
 
-_See the readme file in the main branch for updated instructions and information._
-## Instructions
-This repository has branches for each of the videos in the course. You can use the branch pop up menu in github to switch to a specific branch and take a look at the course at that stage, or you can add `/tree/BRANCH_NAME` to the URL to go to the branch you want to access.
+This web application leverages the power of the Google Gemini AI model to generate descriptive captions for uploaded images. It aims to provide helpful descriptions, particularly for visually impaired users, and includes options for different caption styles and text-to-speech output.
 
-## Branches
-The branches are structured to correspond to the videos in the course. The naming convention is `CHAPTER#_MOVIE#`. As an example, the branch named `02_03` corresponds to the second chapter and the third video in that chapter. 
-Some branches will have a beginning and an end state. These are marked with the letters `b` for "beginning" and `e` for "end". The `b` branch contains the code as it is at the beginning of the movie. The `e` branch contains the code as it is at the end of the movie. The `main` branch holds the final state of the code when in the course.
+## Features
 
-When switching from one exercise files branch to the next after making changes to the files, you may get a message like this:
+* **Image Upload:** Supports uploading common image formats (JPEG, PNG, GIF, WEBP).
+* **AI Caption Generation:** Connects to the Google Gemini API (configurable model, e.g., `gemini-1.5-pro`) to generate 5 distinct captions for the uploaded image.
+* **Style Selection:** Allows users to choose a desired style/tone for the generated captions (e.g., Default, Short, Detailed, Humorous, Formal).
+* **Text-to-Speech:** Reads the generated captions aloud using the browser's built-in speech synthesis capabilities.
+* **Modern UI:** Responsive interface built with Bootstrap and enhanced with custom styling, including loading indicators.
+* **Backend Server:** Uses Node.js and Express to handle image uploads and communication with the Gemini API securely.
 
-    error: Your local changes to the following files would be overwritten by checkout:        [files]
-    Please commit your changes or stash them before you switch branches.
-    Aborting
+## Technologies Used
 
-To resolve this issue:
-	
-    Add changes to git using this command: git add .
-	Commit changes using this command: git commit -m "some message"
+* **Frontend:**
+    * HTML5
+    * CSS3 (with Bootstrap 4)
+    * JavaScript (Vanilla JS)
+    * Axios (for API requests)
+* **Backend:**
+    * Node.js
+    * Express.js
+    * `@google/generative-ai` (Google AI SDK for Node.js)
+    * Multer (for handling file uploads)
+    * `dotenv` (for environment variables)
+* **AI Service:**
+    * Google Gemini API
 
-### Instructor
+## Setup and Installation
 
-Fikayo Adepoju
+Follow these steps to get the project running locally:
 
-Technical Writer | Software Developer                 
+1.  **Prerequisites:**
+    * Node.js and npm (or yarn) installed.
+    * Git installed.
+    * A Google Gemini API Key (obtain from [Google AI Studio](https://aistudio.google.com/app/apikey)).
 
-Check out my other courses on [LinkedIn Learning](https://www.linkedin.com/learning/instructors/fikayo-adepoju?u=104).
+2.  **Clone the Repository:**
+    ```bash
+    git clone [https://github.com/maruf-102/Ai-image-caption-generator.git](https://github.com/maruf-102/Ai-image-caption-generator.git) # Replace with your actual repo URL if different
+    cd Ai-image-caption-generator
+    ```
 
+3.  **Backend Setup:**
+    * Navigate to the backend directory:
+        ```bash
+        cd backend
+        ```
+    * Install backend dependencies:
+        ```bash
+        npm install
+        # or: yarn install
+        ```
+    * Create an environment file named `.env` in the `backend` directory.
+    * Add your Google Gemini API key to the `.env` file:
+        ```dotenv
+        API_KEY="YOUR_GOOGLE_API_KEY"
+        ```
+        *(Replace `YOUR_GOOGLE_API_KEY` with your actual key)*
 
-[0]: # (Replace these placeholder URLs with actual course URLs)
+4.  **Frontend Setup:**
+    * No specific installation steps are usually required for the frontend if you haven't added separate build tools.
 
-[lil-course-url]: https://www.linkedin.com/learning/build-an-image-captioning-tool-for-visually-impaired-users-with-gemini
-[lil-thumbnail-url]: https://media.licdn.com/dms/image/D560DAQHvLDVro1C27Q/learning-public-crop_675_1200/0/1715978287117?e=2147483647&v=beta&t=mPW4isxbzts-zauVcIBJp8wytJhBogouPsZtaIzR8Fg
+## Running the Application
 
+1.  **Start the Backend Server:**
+    * Make sure you are in the `backend` directory in your terminal.
+    * Run the server:
+        ```bash
+        node server.js
+        ```
+    * The server should start, typically on port 3000 (or as configured). Keep this terminal running.
+
+2.  **Access the Frontend:**
+    * Open the `frontend` directory in your file explorer.
+    * Double-click the `index.html` file to open it in your web browser.
+    * Alternatively, if you have a simple HTTP server extension (like VS Code's Live Server), you can serve the `frontend` directory.
+
+## Usage
+
+1.  Open the `index.html` page in your browser.
+2.  Click "Choose Image File" to select an image from your computer. A preview will be shown.
+3.  Select the desired caption style from the dropdown menu.
+4.  Click the "Generate Captions" button.
+5.  Wait for the loading spinner to disappear. The generated captions will appear in the text area.
+6.  Click the "Hear Captions" button to listen to the generated text.
+
+## License
+
+Refer to the LICENSE file in the repository. (You might want to specify the license type here, e.g., MIT License).
