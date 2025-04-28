@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Image Captioning Tool</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #007bff;
+            --primary-darker: #0056b3;
+            --primary-hover-color: #0056b3;
+
+            /* New Background Palette - inspired by reference image */
+            --bg-base: #c8e1fd; /* A very light, slightly cool off-white/beige */
+            --blob-color-1: rgba(160, 190, 255, 0.25); /* Soft light blue, semi-transparent */
+            --blob-color-2: rgba(230, 210, 255, 0.2); /* Soft light purple, semi-transparent */
+            --blob-color-3: rgba(180, 230, 210, 0.15); /* Soft light teal, semi-transparent */
+
+
+            /* Neutrals and Shadows */
+            --dark-gray: #343a40; /* Slightly darker text for contrast */
+            --medium-gray: #e9ecef;
+            --card-bg: #ffffff;
+            --shadow-sm: 0 2px 5px rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 6px 22px rgba(0, 0, 0, 0.07); /* Slightly softer, larger shadow */
+            --border-radius: 0.6rem; /* Slightly more rounded */
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--dark-gray);
+            line-height: 1.6;
+            min-height: 100vh;
+
+            /* Layered Radial Gradients for Soft Background */
+            background-color: var(--bg-base); /* Base color */
+            background-image:
+                /* Top-right blob */
+                radial-gradient(ellipse at 90% 10%, var(--blob-color-1) 0%, transparent 50%),
+                /* Bottom-left blob */
+                radial-gradient(ellipse at 10% 90%, var(--blob-color-2) 0%, transparent 55%),
+                 /* Center-ish subtle blob */
+                radial-gradient(ellipse at 50% 50%, var(--blob-color-3) 0%, transparent 45%);
+            background-repeat: no-repeat;
+            background-attachment: fixed; /* Keep gradient fixed during scroll */
+        }
+
+        h1 {
+            font-weight: 700;
+            margin-bottom: 2.5rem !important;
+            /* Gradient Text Effect */
+            background: linear-gradient(45deg, var(--primary-color) 30%, var(--primary-darker) 90%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-fill-color: transparent;
+            display: inline-block;
+        }
+
+        .card {
+            border: none;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-md);
+            margin-bottom: 2rem;
+            background-color: var(--card-bg); /* Opaque cards on top of gradient */
+            overflow: hidden;
+        }
+
+        .card-header {
+            background-color: transparent;
+            border-bottom: 1px solid var(--medium-gray);
+            font-weight: 600;
+            font-size: 1.1rem;
+            padding: 1rem 1.25rem;
+            color: var(--primary-darker);
+        }
+
+        .card-body {
+             padding: 1.5rem;
+        }
+
+        #imagePreview {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto 1.5rem auto;
+            border: 1px solid var(--medium-gray);
+            border-radius: calc(var(--border-radius) * 0.8);
+            min-height: 250px;
+            background-color: var(--medium-gray);
+        }
+
+        /* Form styling */
+        .form-group label {
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+        .form-control, .form-control-file, .custom-select {
+            border-radius: calc(var(--border-radius) * 0.7);
+            border-color: #ced4da;
+        }
+        .form-control:focus, .custom-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+        .form-control-file {
+            border: 1px solid #ced4da;
+            padding: .375rem .75rem;
+        }
+
+
+        /* Button styling */
+        .btn {
+            border-radius: calc(var(--border-radius) * 0.7);
+            padding: 0.6rem 1.2rem;
+            font-weight: 600;
+            transition: all 0.25s ease-in-out;
+            border: none;
+            box-shadow: var(--shadow-sm);
+        }
+        .btn-primary {
+             background: linear-gradient(45deg, var(--primary-color), var(--primary-darker));
+             color: white;
+             border: none;
+        }
+        .btn-primary:hover, .btn-primary:focus {
+            background: linear-gradient(45deg, var(--primary-hover-color), #00418a);
+            color: white;
+            box-shadow: 0 6px 12px rgba(0, 123, 255, 0.3);
+            transform: translateY(-2px);
+        }
+         .btn-secondary {
+             background-color: #6c757d;
+             border-color: #6c757d;
+             color: #fff;
+        }
+         .btn-secondary:hover, .btn-secondary:focus {
+            background-color: #5a6268;
+            border-color: #545b62;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
+        }
+        .btn:disabled {
+            transform: none;
+            box-shadow: none;
+            background: var(--medium-gray);
+            opacity: 0.65;
+        }
+
+
+        /* Caption Area Styling */
+        #imageCaption {
+            max-height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            padding: 1rem 1.2rem;
+            padding-right: 15px;
+            background-color: rgba(255, 255, 255, 0.85); /* Slightly transparent white */
+            border: 1px solid rgba(0, 0, 0, 0.05); /* Very subtle border */
+            border-radius: calc(var(--border-radius) * 0.7);
+            min-height: 120px;
+            margin-bottom: 1.5rem;
+            color: #212529; /* Darker text */
+            font-size: 0.95rem;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+            backdrop-filter: blur(2px); /* Subtle blur if supported */
+            -webkit-backdrop-filter: blur(2px);
+        }
+        /* Custom scrollbar */
+        #imageCaption::-webkit-scrollbar { width: 8px; }
+        #imageCaption::-webkit-scrollbar-track { background: rgba(233, 236, 239, 0.5); border-radius: 4px; } /* Slightly transparent track */
+        #imageCaption::-webkit-scrollbar-thumb { background-color: var(--primary-color); border-radius: 4px; border: 2px solid transparent; background-clip: content-box; } /* Nicer thumb */
+        #imageCaption::-webkit-scrollbar-thumb:hover { background-color: var(--primary-hover-color); }
+
+
+        /* Style for the loading spinner */
+        #loadingSpinner {
+            display: none;
+            margin: 3rem auto;
+            width: 3rem;
+            height: 3rem;
+            border-width: .3rem;
+            color: var(--primary-color);
+        }
+
+        .caption-output {
+             min-height: 142px;
+             /* Ensure it allows the backdrop filter to work if needed */
+             position: relative; /* Needed for potential pseudo-elements if doing complex backgrounds */
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container mt-5 mb-5">
+        <h1 class="text-center">AI Image Captioning Tool</h1>
+        <div class="row">
+
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-header">
+                        Image Preview & Upload
+                    </div>
+                    <div class="card-body">
+                        <img id="imagePreview" src="https://placehold.co/500x300/e9ecef/6c757d?text=Image+Preview" alt="Image preview">
+
+                        <form id="imageUploadForm">
+                             <div class="form-group">
+                                <label for="imageInput">Choose Image File</label>
+                                <input type="file" class="form-control-file" id="imageInput" accept="image/*">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="captionStyleSelect">Select Caption Style</label>
+                                <select class="form-control custom-select" id="captionStyleSelect">
+                                    <option value="default" selected>Default (Descriptive)</option>
+                                    <option value="short">Short & Punchy</option>
+                                    <option value="detailed">Detailed</option>
+                                    <option value="humorous">Humorous</option>
+                                    <option value="formal">Formal</option>
+                                </select>
+                            </div>
+
+                            <button type="button" id="submitBtn" class="btn btn-primary w-100 mt-3">
+                                Generate Captions
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-header">
+                        Generated Captions
+                    </div>
+                    <div class="card-body text-center">
+                        <div id="loadingSpinner" class="spinner-border" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                         <div class="caption-output text-left">
+                             <p id="imageCaption">Captions will appear here after submitting an image.</p>
+                        </div>
+                        <button id="speakBtn" class="btn btn-secondary w-100" disabled>Hear Captions</button>
+                    </div>
+                </div>
+            </div>
+
+        </div> </div> <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
