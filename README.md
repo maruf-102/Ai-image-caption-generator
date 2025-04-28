@@ -1,6 +1,6 @@
 # AI Image Captioning Tool
 
-![App Screenshot Placeholder](![image](https://github.com/user-attachments/assets/411e99a5-2166-44b5-80e9-61f0eca8910b)
+![App Screenshot Placeholder](![image]([https://github.com/user-attachments/assets/411e99a5-2166-44b5-80e9-61f0eca8910b](https://github.com/maruf-102/Ai-image-caption-generator/blob/main/Screenshot%20of%20AI%20Image%20Captioning%20Tool.jpg?raw=true))
 )
 
 
