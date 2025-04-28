@@ -1,5 +1,6 @@
 # AI Image Captioning Tool
-![Screenshot of AI Image Captioning Tool](https://github.com/user-attachments/assets/1f71b5b2-2543-446e-89f2-bce76cd1f28e)
+![Screenshot of AI Image Captioning Tool](https://github.com/user-attachments/assets/79bf0612-238e-4638-968e-203b2cb3b8e4)
+
 
 ## About This Project
 
